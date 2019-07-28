@@ -42,7 +42,6 @@ class Dota2(scrapy.Spider):
     def parse_detail(self, response):
         hero_type = response.url.split("?")[1]
         url = response.url.split("?")[0]
-        print(url, hero_type)
         heroname = url.replace("http://www.dotamax.com/hero/detail/", "")
         heroname = heroname.replace("/", "")
         item = Dota2Item()
@@ -164,7 +163,7 @@ class Dota2(scrapy.Spider):
             if len(int_add) > 0:
                 item['primary_attr']["int_add"] = int_add[0]
 
-            p1 = re.compile(".*?armor_add = (.*?)\*.*?;", re.S)
+            p1 = re.compile(".*?armor_add = (.*?)/.*?;", re.S)
             agi_add = re.findall(p1, i)
             if len(agi_add) > 0:
                 item['primary_attr']["agi_add"] = agi_add[0]
@@ -173,22 +172,12 @@ class Dota2(scrapy.Spider):
             armor_init = re.findall(p1, i)
             if len(armor_init) > 0:
                 item['primary_attr']["armor_init"] = armor_init[0]
-            
-            p1 = re.compile(".*?armor_init = (.*?)\+.*?;", re.S)
-            armor_init = re.findall(p1, i)
-            if len(armor_init) > 0:
-                item['primary_attr']["armor_init"] = armor_init[0]
-            
-            p1 = re.compile(".*?armor_init = (.*?)\+.*?;", re.S)
-            armor_init = re.findall(p1, i)
-            if len(armor_init) > 0:
-                item['primary_attr']["armor_init"] = armor_init[0]
-            
+
             p1 = re.compile(".*?attack_min = (\d+);", re.S)
             attack_min = re.findall(p1, i)
             if len(attack_min) > 0:
                 item['primary_attr']["attack_min"] = attack_min[0]
-            
+
             p1 = re.compile(".*?attack_max = (\d+);", re.S)
             attack_max = re.findall(p1, i)
             if len(attack_max) > 0:
