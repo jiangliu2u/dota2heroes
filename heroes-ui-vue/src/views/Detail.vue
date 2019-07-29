@@ -1,22 +1,49 @@
 <template>
     <div class="about">
-        <h1>{{detail.name_cn}}</h1>
+        <h1></h1>
+        <el-container>
+            <el-header>{{detail.name_cn}}({{level}}级)</el-header>
+            <el-main>
+                <div class="grid-content">
 
-        <el-main>
-            <div class="grid-content">
-                <el-slider v-model="level" :min="1" :max="25"></el-slider>
-                <el-button class="stat" type="danger">力量:{{current.str}}</el-button>
-                <el-button class="stat" type="success">敏捷:{{current.agi}}</el-button>
-                <el-button class="stat" type="primary">智力:{{current.int}}</el-button>
-                <el-button class="stat" type="warning">攻击力:{{current.attack_min}}-{{current.attack_max}}</el-button>
-            </div>
-            <div class="grid-content">
-                <el-button class="stat">生命:{{current.hp}}</el-button>
-                <el-button class="stat">魔法:{{current.mana}}</el-button>
-                <el-button class="stat">护甲:{{current.armor}}</el-button>
-                <el-button class="stat">移速:{{detail.move_speed}}</el-button>
-            </div>
-        </el-main>
+                    <el-slider v-model="level" :min="1" :max="25"></el-slider>
+                    <div class="el-button--danger stat">力量:{{current.str}}</div>
+                    <div class="el-button--success stat">敏捷:{{current.agi}}</div>
+                    <div class="el-button--primary stat">智力:{{current.int}}</div>
+                    <div class="el-button--warning stat">攻击力:{{current.attack_min}}-{{current.attack_max}}</div>
+                    <div class="stat">生命:{{current.hp}}</div>
+                    <div class="stat">魔法:{{current.mana}}</div>
+                    <div class="stat">护甲:{{current.armor}}</div>
+                    <div class="stat">移速:{{detail.move_speed}}</div>
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span class="title">天赋</span>
+                            <!--//<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+                        </div>
+                        <div class="text item">
+
+                            <div v-for="(line,index) in raw.talent">
+                                <div>{{index}}级:&nbsp&nbsp&nbsp{{line}}</div>
+                            </div>
+                        </div>
+                    </el-card>
+                    <div v-for="(item,key) in raw.abilities">
+                        <el-card class="box-card">
+                            <div slot="header" class="clearfix">
+                                <span class="title">{{key}}</span>
+                                <!--//<el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+                            </div>
+                            <div class="text item">
+                                <div class="desc">{{item.desc}}</div>
+                                <div v-for="(line,index) in item.detail">
+                                    <div>{{line}}</div>
+                                </div>
+                            </div>
+                        </el-card>
+                    </div>
+                </div>
+            </el-main>
+        </el-container>
 
     </div>
 </template>
@@ -75,6 +102,11 @@
         },
         mounted() {
             this.raw = this.$route.params['detail'];
+            for (let i in this.raw['abilities']) {
+                if (this.raw['abilities'].hasOwnProperty(i)) {
+                    this.raw['abilities'][i]['detail'] = this.raw['abilities'][i]['detail'].split(",");
+                }
+            }
             this.detail.name_cn = this.raw['name_cn'];
             this.detail.str = this.raw['attr']['力量'];
             this.detail.str_add = this.raw['attr']['str_add'];
@@ -113,6 +145,13 @@
 </script>
 <style>
     .stat {
-        width: 200px;
+        margin: 10px;
+        border-radius: 4px;
+    }
+    .desc{
+        color: #606266;
+    }
+    .title{
+        color: coral;
     }
 </style>
